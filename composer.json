@@ -4,7 +4,7 @@
 	"type": "project",
 	"config": {
 		"platform": {
-			"php": "7.4"
+			"php": "8.2"
 		},
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true
@@ -19,13 +19,15 @@
 		}
 	],
 	"require": {
-		"php": ">=7.4",
+		"php": ">=8.2",
 		"google/apiclient": "^2.15"
 	},
 	"require-dev": {
 		"wp-coding-standards/wpcs": "^3.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-		"phpcompatibility/phpcompatibility-wp": "^2.1"
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"phpunit/phpunit": "^9.6",
+		"humbug/php-scoper": "^0.18.14"
 	},
 	"scripts": {
 		"post-install-cmd": [

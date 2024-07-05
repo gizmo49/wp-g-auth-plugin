@@ -20,6 +20,7 @@ use WPMUDEV\PluginTest\Base;
 use WPMUDEV\PluginTest\Endpoints\V1\Auth_Confirm;
 use Google\Client;
 
+
 class Auth extends Base {
 	/**
 	 * Google client instance.
@@ -36,8 +37,10 @@ class Auth extends Base {
 
 	private $redirect_url = '';
 
+
 	public function init() {
 	}
+
 
 	/**
 	 * Getter method for Client instance.
@@ -72,18 +75,20 @@ class Auth extends Base {
 	 *
 	 * @return boolean
 	 */
-	public function set_up( string $client_id = '', string $client_secret = '' ): bool {
+	public function set_up( string $client_id = '', string $client_secret = '' ) {
+		$gClient = $this->client();
+
 		$client_id     = ! empty( $client_id ) ? $client_id : $this->get_client_id();
 		$client_secret = ! empty( $client_secret ) ? $client_secret : $this->get_client_secret();
 
-		$this->client()->setClientId( $client_id );
-		$this->client()->setClientSecret( $client_secret );
-		// Todo: Set the return url based on new endpoint.
-		//$this->client()->setRedirectUri();
-		$this->client()->addScope( 'profile' );
-		$this->client()->addScope( 'email' );
 
-		return true;
+		$gClient->setClientId($client_id);
+		$gClient->setClientSecret($client_secret);
+		$gClient->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/wp-json/wpmudev/v1/auth/confirm');
+		$gClient->addScope( 'profile' );
+		$gClient->addScope( 'email' );
+
+		return $gClient;
 	}
 
 	/**
@@ -117,8 +122,9 @@ class Auth extends Base {
 	}
 
 	public function get_auth_url() {
-		return $this->client()->createAuthUrl();
+		return $this->set_up()->createAuthUrl();
 	}
+
 
 	protected function get_settings() {
 		static $settings = null;

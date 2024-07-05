@@ -18,7 +18,7 @@ defined( 'WPINC' ) || die;
 
 use WPMUDEV\PluginTest\Base;
 use WPMUDEV\PluginTest\Endpoints\V1\Auth_Confirm;
-
+ 
 class Auth extends Base {
 	/**
 	 * The page title.
@@ -48,7 +48,7 @@ class Auth extends Base {
 	 *
 	 * @var string
 	 */
-	private $option_name = 'wpmudev_plugin_tests_auth';
+	private $option_name = 'wpmudev_plugin_test_settings';
 
 	/**
 	 * Page Assets.
@@ -86,6 +86,7 @@ class Auth extends Base {
 
 		add_action( 'admin_menu', array( $this, 'register_admin_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+
 		// Add body class to admin pages.
 		add_filter( 'admin_body_class', array( $this, 'admin_body_classes' ) );
 	}
@@ -103,6 +104,8 @@ class Auth extends Base {
 
 		add_action( 'load-' . $page, array( $this, 'prepare_assets' ) );
 	}
+
+
 
 	/**
 	 * The admin page callback method.
@@ -153,6 +156,7 @@ class Auth extends Base {
 		);
 	}
 
+
 	/**
 	 * Gets assets data for given key.
 	 *
@@ -189,6 +193,7 @@ class Auth extends Base {
 	public function enqueue_assets() {
 		if ( ! empty( $this->page_scripts ) ) {
 			foreach ( $this->page_scripts as $handle => $page_script ) {
+
 				wp_register_script(
 					$handle,
 					$page_script['src'],
@@ -202,7 +207,10 @@ class Auth extends Base {
 				}
 
 				wp_enqueue_script( $handle );
+				wp_set_script_translations($handle, 'wpmudev-plugin-test', WPMUDEV_PLUGINTEST_DIR . 'languages/');
+				load_plugin_textdomain('wpmudev-plugin-test', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 
+				
 				if ( ! empty( $page_script['style_src'] ) ) {
 					wp_enqueue_style( $handle, $page_script['style_src'], array(), $this->assets_version );
 				}

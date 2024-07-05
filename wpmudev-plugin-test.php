@@ -5,7 +5,7 @@
  * Requires at least: 6.1
  * Requires PHP:      7.4
  * Version:           0.1.0
- * Author:            PLEASE ADD YOU FULL NAME HERE
+ * Author:            Chika Benjamin.
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       wpmudev-plugin-test
@@ -21,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 }
-
 
 // Plugin version.
 if ( ! defined( 'WPMUDEV_PLUGINTEST_VERSION' ) ) {
@@ -45,7 +44,7 @@ if ( ! defined( 'WPMUDEV_PLUGINTEST_URL' ) ) {
 
 // Assets url.
 if ( ! defined( 'WPMUDEV_PLUGINTEST_ASSETS_URL' ) ) {
-	define( 'WPMUDEV_PLUGINTEST_ASSETS_URL', WPMUDEV_PLUGINTEST_URL . '/assets' );
+	define( 'WPMUDEV_PLUGINTEST_ASSETS_URL', WPMUDEV_PLUGINTEST_URL . 'assets' );
 }
 
 // Shared UI Version.
@@ -87,12 +86,6 @@ class WPMUDEV_PluginTest {
 	 * Class initializer.
 	 */
 	public function load() {
-		load_plugin_textdomain(
-			'wpmudev-plugin-test',
-			false,
-			dirname( plugin_basename( __FILE__ ) ) . '/languages'
-		);
-
 		WPMUDEV\PluginTest\Loader::instance();
 	}
 }
@@ -104,3 +97,39 @@ add_action(
 		WPMUDEV_PluginTest::get_instance()->load();
 	}
 );
+
+
+
+// Exists WP cli 
+if (!(defined('WP_CLI') && WP_CLI)) {
+    return;
+}
+
+
+// WP CLI Config
+class WPMUDEV_Last_Scan_CLI {
+	/**
+	 * Scan posts and update the last scan timestamp.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--post_types=<post_types>]
+	 * : Comma separated list of post types to scan. Default is 'post,page'.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp wpmudev last-scan --post_types=post,page
+	 *     wp wpmudev last-scan --post_types=post
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 */
+	public function last_scan($args, $assoc_args) {
+		$post_types = isset($assoc_args['post_types']) ? explode(',', $assoc_args['post_types']) : ['post', 'page'];
+		WPMUDEV\PluginTest\App\Services\WPPostScanService::wpmudev_scan_and_update_last_scan($post_types);
+		WP_CLI::success('Posts scanned and updated successfully!');
+	}
+}
+
+
+WP_CLI::add_command( 'wpmudev last-scan', array('WPMUDEV_Last_Scan_CLI', 'last_scan'));

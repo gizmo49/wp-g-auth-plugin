@@ -92,7 +92,10 @@ final class Loader extends Base {
 	 * @return void
 	 */
 	private function init() {
+		App\Services\GoogleServices::instance()->init();
 		App\Admin_Pages\Auth::instance()->init();
+		App\Admin_Pages\PostsMaintenance::instance()->init();
 		Endpoints\V1\Auth::instance();
+
 	}
 }

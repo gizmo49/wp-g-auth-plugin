@@ -4,6 +4,8 @@ $sui-image-path: '~@wpmudev/shared-ui/dist/images/';
 
 // Share UI styles
 @import "@wpmudev/shared-ui";
+@import "@wordpress/components/build-style/style.css";
+
 
 .sui-box-body {
     .components-base-control {
